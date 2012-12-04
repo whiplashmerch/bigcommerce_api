@@ -17,11 +17,12 @@ Jeweler::Tasks.new do |gem|
   gem.name = "bigcommerce_api"
   gem.homepage = "http://github.com/ideaoforder/bigcommerce_api"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{Enables Ruby applications to communicate with the BigCommerce API}
+  gem.description = %Q{Enables Ruby applications to communicate with the BigCommerce API V2.}
   gem.email = "mark@sitesteaders.com"
   gem.authors = ["Mark Dickson"]
   # dependencies defined in Gemfile
+  gem.files = Dir.glob('lib/**/*.rb')
 end
 Jeweler::RubygemsDotOrgTasks.new
 
