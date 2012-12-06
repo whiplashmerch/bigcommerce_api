@@ -1,10 +1,5 @@
 module BigcommerceAPI
 
-  # Example Class Method
-  # def reserved(*names)
-  #   class_variable_set(:@@reserved, names.collect{|x| x.to_s})
-  # end
-
   class Base
     extend BigcommerceAPI
 
