@@ -52,7 +52,7 @@ module BigcommerceAPI
             res = m.to_s
           end
           define_method meth do
-            out = BigcommerceAPI::Base.get("#{self.send(meth + '_resource')['resource']}.json")
+            out = BigcommerceAPI::Base.get("#{self.send(meth + '_hash')['resource']}.json")
             obj = res.singularize.camelize
             if out and !defined?('BigcommerceAPI::' + obj).nil?
               out.collect{|o| ('BigcommerceAPI::' + obj).constantize.new(o)}
@@ -72,7 +72,7 @@ module BigcommerceAPI
             resource = m.to_s
           end
           define_method meth do
-            out = BigcommerceAPI::Base.get("#{self.send(meth + '_hash')['resource']}.json")
+            out = BigcommerceAPI::Base.get("#{self.send(meth + '_resource')['resource']}.json")
             obj = resource.singularize.camelize
             if out and !defined?('BigcommerceAPI::' + obj).nil?
               ('BigcommerceAPI::' + obj).constantize.new(out)
