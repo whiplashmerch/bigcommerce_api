@@ -6,8 +6,8 @@ module BigcommerceAPI
     belongs_to :option_set, {:parent_order_product => :order_product}, :ebay_item, :ebay_transaction, :return, :product, :order
   
     def shippingaddress
-      a = self.connection.get "/orders/#{self.order_id}/shippingaddresses/#{self.order_address_id}"
-      Shippingaddress.new(a, self.connection)
+      a = BigcommerceAPI::Base.get "/orders/#{self.order_id}/shippingaddresses/#{self.order_address_id}.json"
+      BigcommerceAPI::Shippingaddress.new(a)
     end
   
   end

@@ -1,67 +1,6 @@
-module BigcommerceAPI
-	def has_many(*names)
-    class_variable_set(:@@has_many_options, names.collect{|x| x.is_a?(Hash) ? x.keys.first.to_s : x.to_s})
-    names.each do |m|
-      if m.is_a? Hash
-        meth = m.keys.first.to_s
-        resource = m.values.first.to_s
-      else
-        meth = m.to_s
-        resource = m.to_s
-      end
-      define_method meth do
-        out = BigcommerceAPI::Base.get("/#{self.send(meth + '_hash')['resource']}.json")
-        obj = resource.singularize.camelize
-        if out and !defined?('BigcommerceAPI::' + obj).nil?
-          out.collect{|o| ('BigcommerceAPI::' + obj).constantize.new(o)}
-        end
-      end
-    end
-  end
-
-  def has_one(*names)
-    class_variable_set(:@@has_one_options, names.collect{|x| x.is_a?(Hash) ? x.keys.first.to_s : x.to_s})
-    names.each do |m|
-      if m.is_a? Hash
-        meth = m.keys.first.to_s
-        resource = m.values.first.to_s
-      else
-        meth = m.to_s
-        resource = m.to_s
-      end
-      define_method meth do
-        out = self.connection.get self.send(meth + "_resource")['resource']
-        obj = resource.singularize.camelize
-        if out and !defined?('BigcommerceAPI::' + obj).nil?
-          ('BigcommerceAPI::' + obj).constantize.new(out, self.connection)
-        end
-      end
-    end
-  end
-  
-  def belongs_to(*names)
-    class_variable_set(:@@belongs_to_options, names.collect{|x| x.is_a?(Hash) ? x.keys.first.to_s : x.to_s})
-    names.each do |m|
-      if m.is_a? Hash
-        meth = m.keys.first.to_s
-        resource = m.values.first.to_s
-      else
-        meth = m.to_s
-        resource = m.to_s
-      end
-      define_method meth do
-        obj = resource.singularize.camelize
-        url = '/' + meth.pluralize + '/' + self.send(meth + "_id").to_s
-        out = self.connection.get url
-        if out and !defined?('BigcommerceAPI::' + obj).nil?
-          return ('BigcommerceAPI::' + obj).constantize.new(out, self.connection) 
-        end
-      end
-    end
-  end  
+module BigcommerceAPI  
 
   class Resource < Base
-  	@@has_many_options = []
 
   	def initialize(data)
       data.each do |k, v|
@@ -70,17 +9,21 @@ module BigcommerceAPI
         else
           val = v
         end
-        k = "#{k}_hash" if defined?(@@has_many_options) and @@has_many_options.include? k
-        k = "#{k}_resource" if defined?(@@has_one_options) and @@has_one_options.include? k
+        k = "#{k}_hash" if !self.class.has_many_options.nil? and self.class.has_many_options.include? k
+        k = "#{k}_resource" if !self.class.has_one_options.nil? and self.class.has_one_options.include? k
         k = "#{self.class.name.downcase.to_s}_#{k}" if k == 'type'
         send(:"#{k}=", val) if self.respond_to? "#{k}="
       end
     end
 
     def save
-      response = BigcommerceAPI::Base.put("/#{self.class.resource}/#{id}.json", :body => self.attributes(true).to_json)
+      if self.id.nil?
+        response = BigcommerceAPI::Base.post("/#{self.class.resource}.json", :body => self.attributes(true).to_json)
+      else
+        response = BigcommerceAPI::Base.put("/#{self.class.resource}/#{self.id}.json", :body => self.attributes(true).to_json)
+      end
       if response.success?
-        return true
+        return self.id.nil? ? self.new(response.parsed_response) : true
       else
         return false
       end
@@ -96,10 +39,68 @@ module BigcommerceAPI
     end
 
   	class << self
+      attr_accessor :has_many_options, :has_one_options, :belongs_to_options
 
-  		def test
-  			puts @@has_many_options.inspect
-  		end
+      def has_many(*names)
+        self.has_many_options = names.collect{|x| x.is_a?(Hash) ? x.keys.first.to_s : x.to_s}
+        names.each do |m|
+          if m.is_a? Hash
+            meth = m.keys.first.to_s
+            res = m.values.first.to_s
+          else
+            meth = m.to_s
+            res = m.to_s
+          end
+          define_method meth do
+            out = BigcommerceAPI::Base.get("#{self.send(meth + '_resource')['resource']}.json")
+            obj = res.singularize.camelize
+            if out and !defined?('BigcommerceAPI::' + obj).nil?
+              out.collect{|o| ('BigcommerceAPI::' + obj).constantize.new(o)}
+            end
+          end
+        end
+      end
+
+      def has_one(*names)
+        self.has_one_options = names.collect{|x| x.is_a?(Hash) ? x.keys.first.to_s : x.to_s}
+        names.each do |m|
+          if m.is_a? Hash
+            meth = m.keys.first.to_s
+            resource = m.values.first.to_s
+          else
+            meth = m.to_s
+            resource = m.to_s
+          end
+          define_method meth do
+            out = BigcommerceAPI::Base.get("#{self.send(meth + '_hash')['resource']}.json")
+            obj = resource.singularize.camelize
+            if out and !defined?('BigcommerceAPI::' + obj).nil?
+              ('BigcommerceAPI::' + obj).constantize.new(out)
+            end
+          end
+        end
+      end
+      
+      def belongs_to(*names)
+        self.belongs_to_options = names.collect{|x| x.is_a?(Hash) ? x.keys.first.to_s : x.to_s}
+        names.each do |m|
+          if m.is_a? Hash
+            meth = m.keys.first.to_s
+            resource = m.values.first.to_s
+          else
+            meth = m.to_s
+            resource = m.to_s
+          end
+          define_method meth do
+            obj = resource.singularize.camelize
+            url = '/' + meth.pluralize + '/' + self.send(meth + "_id").to_s
+            out = BigcommerceAPI::Base.get("#{url}.json")
+            if out and !defined?('BigcommerceAPI::' + obj).nil?
+              return ('BigcommerceAPI::' + obj).constantize.new(out) 
+            end
+          end
+        end
+      end
 
 	  	def resource
 	  		out = self.name.split('::').last.downcase
@@ -118,8 +119,8 @@ module BigcommerceAPI
 	    end
 
 	    def find(id)
-	      resource = BigcommerceAPI::Base.get("/#{resource}/#{id}.json")
-	      resource == nil ? nil : self.new(resource)
+	      r = BigcommerceAPI::Base.get("/#{resource}/#{id}.json")
+	      r == nil ? nil : self.new(r)
 	    end
 	  end
 
