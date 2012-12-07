@@ -8,7 +8,6 @@ module BigcommerceAPI
     belongs_to :customer, :currency, :default_currency, :shipping_cost_tax_class, :wrapping_cost_tax_class, :payment_provider, :handling_cost_tax_class
     
     def shipments
-      s = self.connection.get '/orders/' + self.id.to_s + '/shipments/'
       s = BigcommerceAPI::Base.get '/orders/' + self.id.to_s + '/shipments.json'
       s.collect{|o| BigcommerceAPI::Shipment.new(o)}
     end

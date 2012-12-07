@@ -14,14 +14,14 @@ module BigcommerceAPI
     end
     
     def product_option
-      po = self.connection.get '/products/' + self.product_id.to_s + '/options/' + self.product_option_id.to_s
-      po == false ? false : ProductOption.new(po, self.connection)
+      po = BigcommerceAPI::Base.get '/products/' + self.product_id.to_s + '/options/' + self.product_option_id.to_s + '.json'
+      po == nil ? nil : ProductOption.new(po)
     end
     
     def option_value
       option_id = self.product_option.option_id
-      ov = self.connection.get '/options/' + option_id.to_s + '/values/' + self.option_value_id.to_s
-      ov == false ? false : OptionValue.new(ov, self.connection)
+      ov = BigcommerceAPI::Base.get '/options/' + option_id.to_s + '/values/' + self.option_value_id.to_s + '.json'
+      ov == false ? false : OptionValue.new(ov)
     end
     
     def description
