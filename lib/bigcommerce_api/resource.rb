@@ -11,7 +11,7 @@ module BigcommerceAPI
         end
         k = "#{k}_hash" if !self.class.has_many_options.nil? and self.class.has_many_options.include? k
         k = "#{k}_resource" if !self.class.has_one_options.nil? and self.class.has_one_options.include? k
-        k = "#{self.class.name.downcase.to_s}_#{k}" if k == 'type'
+        k = "#{self.resource}_#{k}" if k == 'type'
         send(:"#{k}=", val) if self.respond_to? "#{k}="
       end
     end
@@ -36,6 +36,10 @@ module BigcommerceAPI
       else
         return false
       end
+    end
+
+    def resource
+      self.class.name.downcase.to_s.split('::').last
     end
 
   	class << self
