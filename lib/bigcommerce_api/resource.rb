@@ -1,6 +1,7 @@
 module BigcommerceAPI  
 
   class Resource < Base
+    attr_accessor :errors
 
   	def initialize(data)
       data.each do |k, v|
@@ -18,28 +19,34 @@ module BigcommerceAPI
 
     def save
       if self.id.nil?
-        response = BigcommerceAPI::Base.post("/#{self.class.resource}.json", :body => self.attributes(true).to_json)
+        response = BigcommerceAPI::Base.post("/#{self.resource_url}.json", :body => self.attributes(true).to_json)
       else
-        response = BigcommerceAPI::Base.put("/#{self.class.resource}/#{self.id}.json", :body => self.attributes(true).to_json)
+        response = BigcommerceAPI::Base.put("/#{self.resource_url}/#{self.id}.json", :body => self.attributes(true).to_json)
       end
       if response.success?
-        return self.id.nil? ? self.new(response.parsed_response) : true
+        return self.id.nil? ? self.class.new(response.parsed_response) : true
       else
+        self.errors = response.parsed_response
         return false
       end
     end
 
     def create(params={})
-      response = BigcommerceAPI::Base.post("/#{self.class.resource}.json", :body => date_adjust(params).to_json)
+      response = BigcommerceAPI::Base.post("/#{self.resource_url}.json", :body => date_adjust(params).to_json)
       if response.success?
-        return self.new(response.parsed_response)
+        return self.class.new(response.parsed_response)
       else
+        self.errors = response.parsed_response
         return false
       end
     end
 
     def resource
       self.class.name.downcase.to_s.split('::').last
+    end
+
+    def resource_url
+      self.class.resource
     end
 
   	class << self

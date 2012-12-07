@@ -11,6 +11,34 @@ module BigcommerceAPI
       a = BigcommerceAPI::Base.get "/orders/#{self.order_id}/shippingaddresses/#{self.order_address_id}.json"
       BigcommerceAPI::Shippingaddress.new(a)
     end
+
+    # TODO: these can probably go in a ReadOnly class
+    def save
+    	self.errors = ["Shipping Addresses are readonly"]
+    	return false
+    end
+
+    def create(params={})
+    	self.errors = ["Shipping Addresses are readonly"]
+    	return false
+    end
+
+    # this overrides the default method, since this has to come in with an order id
+    def resource_url
+      "orders/#{self.order_id}/products"
+    end
+
+    class << self
+	  	def all(order_id, params={})
+	      resources = BigcommerceAPI::Base.get("/orders/#{order_id}/products.json", :query => date_adjust(params))
+	      resources == nil ? [] : resources.collect{|r| self.new(r)}
+	    end
+
+	    def find(order_id, id)
+	      r = BigcommerceAPI::Base.get("/orders/#{order_id}/products/#{id}.json")
+	      r == nil ? nil : self.new(r)
+	    end
+	  end
   
   end
 
