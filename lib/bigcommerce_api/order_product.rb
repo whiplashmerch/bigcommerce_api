@@ -9,7 +9,7 @@ module BigcommerceAPI
   
     def shippingaddress
       a = BigcommerceAPI::Base.get "/orders/#{self.order_id}/shippingaddresses/#{self.order_address_id}.json"
-      BigcommerceAPI::Shippingaddress.new(a)
+      (a.success? and !a.nil?) ? BigcommerceAPI::Shippingaddress.new(a) : nil
     end
 
     # TODO: these can probably go in a ReadOnly class
@@ -31,12 +31,12 @@ module BigcommerceAPI
     class << self
 	  	def all(order_id, params={})
 	      resources = BigcommerceAPI::Base.get("/orders/#{order_id}/products.json", :query => date_adjust(params))
-	      resources == nil ? [] : resources.collect{|r| self.new(r)}
+	      (resources.success? and !resources.nil?) ? resources.collect{|r| self.new(r)} : []
 	    end
 
 	    def find(order_id, id)
 	      r = BigcommerceAPI::Base.get("/orders/#{order_id}/products/#{id}.json")
-	      r == nil ? nil : self.new(r)
+	      (r.success? and !r.nil?) ? self.new(r) : nil
 	    end
 	  end
   

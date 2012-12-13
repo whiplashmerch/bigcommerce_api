@@ -22,16 +22,17 @@ module BigcommerceAPI
     end
 
     class << self
-	  	def all(order_id, params={})
-	      resources = BigcommerceAPI::Base.get("/orders/#{order_id}/shippingaddresses.json", :query => date_adjust(params))
-	      resources == nil ? [] : resources.collect{|r| self.new(r)}
-	    end
+      	def all(order_id, params={})
+          resources = BigcommerceAPI::Base.get("/orders/#{order_id}/shippingaddresses.json", :query => date_adjust(params))
+          (resources.success? and !resources.nil?) ? resources.collect{|r| self.new(r)} : []
+        end
 
-	    def find(order_id, id)
-	      r = BigcommerceAPI::Base.get("/orders/#{order_id}/shippingaddresses/#{id}.json")
-	      r == nil ? nil : self.new(r)
-	    end
-	  end
+        def find(order_id, id)
+          r = BigcommerceAPI::Base.get("/orders/#{order_id}/shippingaddresses/#{id}.json")
+          (r.success? and !r.nil?) ? self.new(r) : nil
+        end
+
+    end
   
   end
 

@@ -42,12 +42,12 @@ module BigcommerceAPI
     class << self
 	  	def all(order_id, params={})
 	      resources = BigcommerceAPI::Base.get("/orders/#{order_id}/shipments.json", :query => date_adjust(params))
-	      resources == nil ? [] : resources.collect{|r| self.new(r)}
+	      (resources.success? and !resources.nil?) ? resources.collect{|r| self.new(r)} : []
 	    end
 
 	    def find(order_id, id)
 	      r = BigcommerceAPI::Base.get("/orders/#{order_id}/shipments/#{id}.json")
-	      r == nil ? nil : self.new(r)
+	      (r.success? and !r.nil?) ? self.new(r) : nil
 	    end
 	  end
   

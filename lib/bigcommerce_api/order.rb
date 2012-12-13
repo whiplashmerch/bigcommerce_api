@@ -9,7 +9,7 @@ module BigcommerceAPI
     
     def shipments
       s = BigcommerceAPI::Base.get '/orders/' + self.id.to_s + '/shipments.json'
-      s.collect{|o| BigcommerceAPI::Shipment.new(o)}
+      (s.success? and !s.nil?) ? s.collect{|o| BigcommerceAPI::Shipment.new(o)} : []
     end
 
   end
