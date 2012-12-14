@@ -10,6 +10,10 @@ module BigcommerceAPI
       "orders/#{self.order_id}/shippingaddresses"
     end
 
+    def parent
+      'order'
+    end
+
     # TODO: these can probably go in a ReadOnly class
     def save
     	self.errors = ["Shipping Addresses are readonly"]

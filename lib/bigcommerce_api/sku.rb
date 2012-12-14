@@ -4,6 +4,14 @@ module BigcommerceAPI
     attr_accessor :id, :sku, :product_id, :cost_price, :upc, :inventory_level, :inventory_warning_level, :bin_picking_number, :options
 
     belongs_to :product
+
+    def resource_url
+      "products/#{self.product_id}/skus"
+    end
+
+    def parent
+      'product'
+    end
     
     def product_option_id
       self.options.first['product_option_id']

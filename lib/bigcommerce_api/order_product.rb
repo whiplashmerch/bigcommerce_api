@@ -28,6 +28,10 @@ module BigcommerceAPI
       "orders/#{self.order_id}/products"
     end
 
+    def parent
+      'order'
+    end
+
     class << self
 	  	def all(order_id, params={})
 	      resources = BigcommerceAPI::Base.get("/orders/#{order_id}/products.json", :query => date_adjust(params))

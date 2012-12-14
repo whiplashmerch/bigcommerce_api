@@ -25,6 +25,7 @@ module BigcommerceAPI
       self.instance_variables.each {|var| hash[var.to_s.delete("@")] = self.instance_variable_get(var) if (var.to_s['_hash'].nil? and var.to_s['_resource'].nil? and var.to_s[self.resource + '_type'].nil?) }
       hash = BigcommerceAPI::Resource.date_adjust(hash)
       BigcommerceAPI::Resource.clean!(hash) if strip_empty
+      hash.delete('id') if strip_empty
       return hash
     end
 

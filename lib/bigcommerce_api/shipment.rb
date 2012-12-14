@@ -10,33 +10,8 @@ module BigcommerceAPI
       "orders/#{self.order_id}/shipments"
     end
 
-    def save
-  	  url = self.resource_url
-    	self.order_id = nil
-
-      if self.id.nil?
-        response = BigcommerceAPI::Base.post("/#{url}.json", :body => self.attributes(true).to_json)
-      else
-        response = BigcommerceAPI::Base.put("/#{url}/#{self.id}.json", :body => self.attributes(true).to_json)
-      end
-      if response.success?
-        return self.id.nil? ? self.class.new(response.parsed_response) : true
-      else
-        self.errors = response.parsed_response
-        return false
-      end
-    end
-
-    def create(params={})
-    	url = self.resource_url
-    	self.order_id = nil
-      response = BigcommerceAPI::Base.post("/#{url}.json", :body => date_adjust(params).to_json)
-      if response.success?
-        return self.new(response.parsed_response)
-      else
-        self.errors = response.parsed_response
-        return false
-      end
+    def parent
+      'order'
     end
 
     class << self

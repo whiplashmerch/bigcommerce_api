@@ -18,10 +18,14 @@ module BigcommerceAPI
     end
 
     def save
+      # delete the parent id if there is one
+      url = self.resource_url
+      self.send(self.parent + '_id=', nil) if !self.parent.nil?
+
       if self.id.nil?
-        response = BigcommerceAPI::Base.post("/#{self.resource_url}.json", :body => self.attributes(true).to_json)
+        response = BigcommerceAPI::Base.post("/#{url}.json", :body => self.attributes(true).to_json)
       else
-        response = BigcommerceAPI::Base.put("/#{self.resource_url}/#{self.id}.json", :body => self.attributes(true).to_json)
+        response = BigcommerceAPI::Base.put("/#{url}/#{self.id}.json", :body => self.attributes(true).to_json)
       end
       if response.success?
         return self.id.nil? ? self.class.new(response.parsed_response) : true
@@ -32,7 +36,11 @@ module BigcommerceAPI
     end
 
     def create(params={})
-      response = BigcommerceAPI::Base.post("/#{self.resource_url}.json", :body => date_adjust(params).to_json)
+      # delete the parent id if there is one
+      url = self.resource_url
+      self.send(self.parent + '_id=', nil) if !self.parent.nil?
+
+      response = BigcommerceAPI::Base.post("/#{url}.json", :body => date_adjust(params).to_json)
       if response.success?
         return self.class.new(response.parsed_response)
       else
@@ -47,6 +55,10 @@ module BigcommerceAPI
 
     def resource_url
       self.class.resource
+    end
+
+    def parent
+      nil
     end
 
   	class << self

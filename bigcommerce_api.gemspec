@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{bigcommerce_api}
-  s.version = "0.2.2"
+  s.version = "0.3.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mark Dickson"]
-  s.date = %q{2012-12-13}
+  s.date = %q{2012-12-14}
   s.description = %q{Enables Ruby applications to communicate with the BigCommerce API V2.}
   s.email = %q{mark@sitesteaders.com}
   s.extra_rdoc_files = [
