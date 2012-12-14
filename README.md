@@ -2,7 +2,7 @@ Bigcommerce API (V2) Client
 ================================
 Full featured Ruby Gem to connect to the Big Commerce API.
 
-Developed and maintained by [Whiplash Merchandising](http://www.whiplashmerchandising.com).
+Developed and maintained by [Whiplash Merchandising](http://www.whiplashmerch.com).
 
 ### Requirements
 
