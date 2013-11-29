@@ -9,8 +9,22 @@ module BigcommerceAPI
     headers 'Content-Type' => "application/json"
 
     def initialize(params={})
-      self.class.basic_auth params[:username], params[:api_key]
-      self.class.base_uri(params[:store_url] + '/api/v2/')
+      # for the time being, accept old school API params
+      if params[:username] and params[:api_key]
+        self.class.basic_auth params[:username], params[:api_key]
+      # default to Oauth
+      else
+        self.class.headers 'X-Auth-Client' => params[:client_id]
+        self.class.headers'X-Auth-Token' => params[:access_token]
+      end
+
+      # if we're using Oauth, we're probably grabbing :store_hash
+      # accept :store_url for legacy purposes
+      if params[:store_url]
+        self.class.base_uri(params[:store_url] + '/api/v2/')
+      else
+        self.class.base_uri("https://store-#{params[:store_hash]}.mybigcommerce.com/api/v2/")
+      end
     end
 
     def get_time
