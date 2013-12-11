@@ -27,13 +27,17 @@ module BigcommerceAPI
       end
     end
 
-    def get_time
-      self.class.get('/time')
+    def time
+      response = self.class.get('/time')
+      response.parsed_response['time']
     end
+    alias_method :get_time, :time
 
-    def settings
-      self.class.get('/settings')
+    def information
+      response = self.class.get('/information')
+      response.parsed_response['information']
     end
+    alias_method :info, :information
 
     # this grabs all of the FIRST LEVEL attributes
     # it ignores hashed and constructed nested attributes,
