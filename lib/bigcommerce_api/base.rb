@@ -15,7 +15,7 @@ module BigcommerceAPI
       # default to Oauth
       else
         self.class.headers 'X-Auth-Client' => params[:client_id]
-        self.class.headers'X-Auth-Token' => params[:access_token]
+        self.class.headers 'X-Auth-Token' => params[:access_token]
       end
 
       # if we're using Oauth, we're probably grabbing :store_hash
@@ -23,12 +23,16 @@ module BigcommerceAPI
       if params[:store_url]
         self.class.base_uri(params[:store_url] + '/api/v2/')
       else
-        self.class.base_uri("https://store-#{params[:store_hash]}.mybigcommerce.com/api/v2/")
+        self.class.base_uri("https://api.bigcommerceapp.com/stores/#{params[:store_hash]}/v2/")
       end
     end
 
     def get_time
-      self.class.get('/time.json')
+      self.class.get('/time')
+    end
+
+    def settings
+      self.class.get('/settings')
     end
 
     # this grabs all of the FIRST LEVEL attributes

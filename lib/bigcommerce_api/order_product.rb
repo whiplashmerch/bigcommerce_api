@@ -8,7 +8,7 @@ module BigcommerceAPI
     attr_accessor :orderproduct_type
   
     def shippingaddress
-      a = BigcommerceAPI::Base.get "/orders/#{self.order_id}/shippingaddresses/#{self.order_address_id}.json"
+      a = BigcommerceAPI::Base.get "/orders/#{self.order_id}/shippingaddresses/#{self.order_address_id}"
       (a.success? and !a.nil?) ? BigcommerceAPI::Shippingaddress.new(a) : nil
     end
 
@@ -34,12 +34,12 @@ module BigcommerceAPI
 
     class << self
 	  	def all(order_id, params={})
-	      resources = BigcommerceAPI::Base.get("/orders/#{order_id}/products.json", :query => date_adjust(params))
+	      resources = BigcommerceAPI::Base.get("/orders/#{order_id}/products", :query => date_adjust(params))
 	      (resources.success? and !resources.nil?) ? resources.collect{|r| self.new(r)} : []
 	    end
 
 	    def find(order_id, id)
-	      r = BigcommerceAPI::Base.get("/orders/#{order_id}/products/#{id}.json")
+	      r = BigcommerceAPI::Base.get("/orders/#{order_id}/products/#{id}")
 	      (r.success? and !r.nil?) ? self.new(r) : nil
 	    end
 	  end

@@ -22,13 +22,13 @@ module BigcommerceAPI
     end
     
     def product_option
-      po = BigcommerceAPI::Base.get '/products/' + self.product_id.to_s + '/options/' + self.product_option_id.to_s + '.json'
+      po = BigcommerceAPI::Base.get '/products/' + self.product_id.to_s + '/options/' + self.product_option_id.to_s
       (po.success? and !po.nil?) ? ProductOption.new(po) : nil
     end
     
     def option_value
       option_id = self.product_option.option_id
-      ov = BigcommerceAPI::Base.get '/options/' + option_id.to_s + '/values/' + self.option_value_id.to_s + '.json'
+      ov = BigcommerceAPI::Base.get '/options/' + option_id.to_s + '/values/' + self.option_value_id.to_s
       (ov.success? and !ov.nil?) ? OptionValue.new(ov) : nil
     end
     
@@ -43,12 +43,12 @@ module BigcommerceAPI
 
     class << self
       def all(product_id, params={})
-        resources = BigcommerceAPI::Base.get("/products/#{product_id}/skus.json", :query => date_adjust(params))
+        resources = BigcommerceAPI::Base.get("/products/#{product_id}/skus", :query => date_adjust(params))
         (resources.success? and !resources.nil?) ? resources.collect{|r| self.new(r)} : []
       end
 
       def find(product_id, id)
-        r = BigcommerceAPI::Base.get("/products/#{product_id}/skus/#{id}.json")
+        r = BigcommerceAPI::Base.get("/products/#{product_id}/skus/#{id}")
         (r.success? and !r.nil?) ? self.new(r) : nil
       end
     end

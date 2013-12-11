@@ -23,9 +23,9 @@ module BigcommerceAPI
       self.send(self.parent + '_id=', nil) if !self.parent.nil?
 
       if self.id.nil?
-        response = BigcommerceAPI::Base.post("/#{url}.json", :body => self.attributes(true).to_json)
+        response = BigcommerceAPI::Base.post("/#{url}", :body => self.attributes(true).to_json)
       else
-        response = BigcommerceAPI::Base.put("/#{url}/#{self.id}.json", :body => self.attributes(true).to_json)
+        response = BigcommerceAPI::Base.put("/#{url}/#{self.id}", :body => self.attributes(true).to_json)
       end
       if response.success?
         return self.id.nil? ? self.class.new(response.parsed_response) : true
@@ -40,7 +40,7 @@ module BigcommerceAPI
       url = self.resource_url
       self.send(self.parent + '_id=', nil) if !self.parent.nil?
 
-      response = BigcommerceAPI::Base.post("/#{url}.json", :body => date_adjust(params).to_json)
+      response = BigcommerceAPI::Base.post("/#{url}", :body => date_adjust(params).to_json)
       if response.success?
         return self.class.new(response.parsed_response)
       else
@@ -75,7 +75,7 @@ module BigcommerceAPI
             res = m.to_s
           end
           define_method meth do
-            out = BigcommerceAPI::Base.get("#{self.send(meth + '_hash')['resource']}.json")
+            out = BigcommerceAPI::Base.get("#{self.send(meth + '_hash')['resource']}")
             obj = res.singularize.camelize
             if out and !defined?('BigcommerceAPI::' + obj).nil?
               (out.success? and !out.nil?) ? out.collect{|o| ('BigcommerceAPI::' + obj).constantize.new(o)} : []
@@ -95,7 +95,7 @@ module BigcommerceAPI
             resource = m.to_s
           end
           define_method meth do
-            out = BigcommerceAPI::Base.get("#{self.send(meth + '_resource')['resource']}.json")
+            out = BigcommerceAPI::Base.get("#{self.send(meth + '_resource')['resource']}")
             obj = resource.singularize.camelize
             if out and !defined?('BigcommerceAPI::' + obj).nil?
               (out.success? and !out.nil?) ? ('BigcommerceAPI::' + obj).constantize.new(out) : nil
@@ -117,7 +117,7 @@ module BigcommerceAPI
           define_method meth do
             obj = resource.singularize.camelize
             url = '/' + meth.pluralize + '/' + self.send(meth + "_id").to_s
-            out = BigcommerceAPI::Base.get("#{url}.json")
+            out = BigcommerceAPI::Base.get("#{url}")
             if out and !defined?('BigcommerceAPI::' + obj).nil?
               (out.success? and !out.nil?) ? ('BigcommerceAPI::' + obj).constantize.new(out) : nil
             end
@@ -137,12 +137,12 @@ module BigcommerceAPI
 	  	end
 
 	  	def all(params={})
-	      resources = BigcommerceAPI::Base.get("/#{resource}.json", :query => date_adjust(params))
+	      resources = BigcommerceAPI::Base.get("/#{resource}", :query => date_adjust(params))
 	      (resources.success? and !resources.nil?) ? resources.collect{|r| self.new(r)} : []
 	    end
 
 	    def find(id)
-	      r = BigcommerceAPI::Base.get("/#{resource}/#{id}.json")
+	      r = BigcommerceAPI::Base.get("/#{resource}/#{id}")
 	      (r.success? and !r.nil?) ? self.new(r) : nil
 	    end
 	  end
