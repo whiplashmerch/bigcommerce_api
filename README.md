@@ -1,6 +1,6 @@
 Bigcommerce API (V2) Client
 ================================
-Full featured Ruby Gem to connect to the Big Commerce API. Similar to the the official gem by Bigcommerce, but with more Ruby-like syntax, allowing you to interact with Ruby objects instead of methods. 
+Full featured Ruby Gem to connect to the Big Commerce API. Similar to the the official gem by Bigcommerce, but with more Ruby-like syntax, allowing you to interact with Ruby objects (with familiar `find` and `save` methods) instead of hashes. 
 
 Additionally, it is compatible with the new OAuth authentication.
 
