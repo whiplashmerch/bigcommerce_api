@@ -1,6 +1,8 @@
 Bigcommerce API (V2) Client
 ================================
-Full featured Ruby Gem to connect to the Big Commerce API.
+Full featured Ruby Gem to connect to the Big Commerce API. Similar to the the official gem by Bigcommerce, but with more Ruby-like syntax, allowing you to interact with Ruby objects instead of methods. 
+
+Additionally, it is compatible with the new OAuth authentication.
 
 Developed and maintained by [Whiplash Merchandising](http://www.whiplashmerch.com).
 
@@ -12,7 +14,7 @@ Developed and maintained by [Whiplash Merchandising](http://www.whiplashmerch.co
 - ActiveSupport 2.3.5+
 - Httparty
 
-A valid username, API key, and store URL are required to authenticate requests.
+A valid username, API key, and store URL OR app client id, OAuth token, and store hash/id are required to authenticate requests.
 
 ### Installation
 
@@ -25,23 +27,35 @@ rake install
 Or if you're using Bundler:
 
 ```
-gem 'bigcommerce_api', '>=0.3.0', :git => 'git://github.com/ideaoforder/bigcommerce_api'
+gem 'bigcommerce_api', '>=0.4.0', :git => 'git://github.com/ideaoforder/bigcommerce_api'
 ```
 
 ### Configuration
 
-To use the API client in your Ruby code, provide the required credentials as follows:
-
+To use the API client in your Ruby code:
 ```
 require 'rubygems'
 require 'bigcommerce_api'
+```
 
+You can currently connect using the existing api key auth:
+```
 api = BigcommerceAPI::Base.new(
 	:api_key => 'XXXXXXXXXXXXX', 
 	:username => 'XXXXXXXX', 
 	:store_url => 'https://YOUR_STORE.mybigcommerce.com'
 )
 ```
+
+Or using the new OAuth credentials (currently in Alpha at Bigcommerce):
+```
+api = BigcommerceAPI::Base.new(
+    :client_id => APP_CLIENT_ID,
+    :store_hash => STORE_HASH/ID,
+    :access_token => OAUTH_ACCESS_TOKEN
+)
+```
+
 You can test your connection by getting the time
 
 ```
@@ -52,7 +66,7 @@ A valid time means your connection and credentials are good.
 
 ### Usage
 
-The API currently gives you read/write access to your all Big Commerce API V2 resources (https://developer.bigcommerce.com/display/API/BigCommerce+API+-+Version+2)
+The API currently gives you read/write access to MOST of your Big Commerce API V2 resources (https://developer.bigcommerce.com/docs/api/v2)
 
 ```
 $ irb
@@ -93,6 +107,6 @@ shipment = BigcommerceAPI::Shipment.create(
 
 ### Copyright
 
-Copyright (c) 2012 Mark Dickson / Whiplash Merchandising. See LICENSE.txt for
+Copyright (c) 2013 Mark Dickson / Whiplash Merchandising. See LICENSE.txt for
 further details.
 
