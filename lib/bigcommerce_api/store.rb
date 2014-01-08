@@ -1,5 +1,5 @@
 module BigcommerceAPI  
-
+  
   class Store < Base
     attr_accessor :errors, :id, :domain, :name, :address, :phone, :admin_email, :order_email, :language, :currency, :currency_symbol, :currency_symbol_location, :decimal_separator, :thousands_separator, :decimal_places, :weight_units, :dimension_units, :plan_name
 
@@ -15,3 +15,7 @@ module BigcommerceAPI
         send(:"#{k}=", val) if self.respond_to? "#{k}="
       end
     end
+
+  end
+
+end
