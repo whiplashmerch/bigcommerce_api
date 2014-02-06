@@ -27,7 +27,7 @@ rake install
 Or if you're using Bundler:
 
 ```
-gem 'bigcommerce_api', '>=0.4.0', :git => 'git://github.com/ideaoforder/bigcommerce_api'
+gem 'bigcommerce_api', '>=0.4.3', :git => 'git://github.com/ideaoforder/bigcommerce_api'
 ```
 
 ### Configuration
@@ -107,6 +107,6 @@ shipment = BigcommerceAPI::Shipment.create(
 
 ### Copyright
 
-Copyright (c) 2013 Mark Dickson / Whiplash Merchandising. See LICENSE.txt for
+Copyright (c) 2014 Mark Dickson / Whiplash Merchandising. See LICENSE.txt for
 further details.
 

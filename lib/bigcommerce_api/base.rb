@@ -23,7 +23,7 @@ module BigcommerceAPI
       if params[:store_url]
         self.class.base_uri(params[:store_url] + '/api/v2/')
       else
-        self.class.base_uri("https://api.bigcommerceapp.com/stores/#{params[:store_hash]}/v2/")
+        self.class.base_uri("https://api.bigcommerce.com/stores/#{params[:store_hash]}/v2/")
       end
     end
 
