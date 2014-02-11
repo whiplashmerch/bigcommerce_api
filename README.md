@@ -27,7 +27,7 @@ rake install
 Or if you're using Bundler:
 
 ```
-gem 'bigcommerce_api', '>=0.4.3', :git => 'git://github.com/ideaoforder/bigcommerce_api'
+gem 'bigcommerce_api'
 ```
 
 ### Configuration
