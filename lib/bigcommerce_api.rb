@@ -4,6 +4,8 @@ require 'active_support/inflector'
 
 require 'bigcommerce_api/base'
 require 'bigcommerce_api/resource'
+require 'bigcommerce_api/category'
+require 'bigcommerce_api/brand'
 require 'bigcommerce_api/image'
 require 'bigcommerce_api/option'
 require 'bigcommerce_api/option_set'
