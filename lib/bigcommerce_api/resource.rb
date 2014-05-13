@@ -15,6 +15,7 @@ module BigcommerceAPI
         k = "#{self.resource}_#{k}" if k == 'type'
         send(:"#{k}=", val) if self.respond_to? "#{k}="
       end
+      self.attributes_were = data.parsed_response
     end
 
     def save
@@ -25,7 +26,11 @@ module BigcommerceAPI
       if self.id.nil?
         response = BigcommerceAPI::Base.post("/#{url}", :body => self.attributes(true).to_json)
       else
-        response = BigcommerceAPI::Base.put("/#{url}/#{self.id}", :body => self.attributes(true).to_json)
+        # only send updated attributes
+        attrs = self.attributes
+        body = Hash.new 
+        self.changed.each{|c| body[c] = attrs[c]}
+        response = BigcommerceAPI::Base.put("/#{url}/#{self.id}", :body => body.to_json)
       end
       if response.success?
         return self.id.nil? ? self.class.new(response.parsed_response) : true
@@ -59,6 +64,15 @@ module BigcommerceAPI
 
     def parent
       nil
+    end
+
+    def changed
+      changed = Array.new
+      self.attributes.each do |k, v|
+        changed << k if v != attributes_were[k]
+      end
+      changed -= %w[attributes_were errors]
+      return changed
     end
 
   	class << self
@@ -147,7 +161,10 @@ module BigcommerceAPI
 	      r = BigcommerceAPI::Base.get("/#{resource}/#{id}")
 	      (r.success? and !r.nil?) ? self.new(r) : nil
 	    end
-	  end
+	  end # end class methods
+
+    private
+      attr_accessor :attributes_were
 
   end
 
