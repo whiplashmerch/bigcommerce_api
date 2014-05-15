@@ -15,7 +15,7 @@ module BigcommerceAPI
         k = "#{self.resource}_#{k}" if k == 'type'
         send(:"#{k}=", val) if self.respond_to? "#{k}="
       end
-      self.attributes_were = data.parsed_response
+      self.attributes_were = data
     end
 
     def save
