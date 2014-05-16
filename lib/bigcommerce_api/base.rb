@@ -51,9 +51,17 @@ module BigcommerceAPI
     def attributes(strip_empty=false)
       hash = {}
       self.instance_variables.each {|var| hash[var.to_s.delete("@")] = self.instance_variable_get(var) if (var.to_s['_hash'].nil? and var.to_s['_resource'].nil? and var.to_s[self.resource + '_type'].nil?) }
+      # Strip out our extra attributes
+      hash.delete('errors')
+      hash.delete('attributes_were')
+
+      # Clean up the date
       hash = BigcommerceAPI::Resource.date_adjust(hash)
+
+      # Strip empty fields
       BigcommerceAPI::Resource.clean!(hash) if strip_empty
       hash.delete('id') if strip_empty
+
       return hash
     end
 
