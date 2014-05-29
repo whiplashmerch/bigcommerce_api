@@ -2,6 +2,8 @@ require "rubygems"
 require 'httparty'
 require 'active_support/inflector'
 
+require 'bigcommerce_api/modules/countable'
+
 require 'bigcommerce_api/base'
 require 'bigcommerce_api/resource'
 require 'bigcommerce_api/category'
