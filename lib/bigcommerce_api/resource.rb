@@ -30,6 +30,11 @@ module BigcommerceAPI
         attrs = self.attributes
         body = Hash.new 
         self.changed.each{|c| body[c] = attrs[c]}
+
+        #remove read-only properties
+        body.delete('id')
+        body.delete('product_id')
+        
         response = BigcommerceAPI::Base.put("/#{url}/#{self.id}", :body => body.to_json)
       end
       if response.success?
