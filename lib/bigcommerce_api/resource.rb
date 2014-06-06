@@ -18,6 +18,11 @@ module BigcommerceAPI
       self.attributes_were = data
     end
 
+    def mark_dirty!
+      self.attributes_were = {}
+      self
+    end
+
     def save
       # delete the parent id if there is one
       url = self.resource_url
