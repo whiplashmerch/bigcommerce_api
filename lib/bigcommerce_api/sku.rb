@@ -41,6 +41,11 @@ module BigcommerceAPI
       return out.join(' ')
     end
 
+    # we override this on resources that need paired IDs for find
+    def find_for_reload
+      self.class.find(self.product_id, self.id)
+    end
+
     class << self
       def all(product_id, params={})
         resources = BigcommerceAPI::Base.get("/products/#{product_id}/skus", :query => date_adjust(params))

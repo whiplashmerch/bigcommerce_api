@@ -28,17 +28,24 @@ module BigcommerceAPI
     end
 
     def time
-      response = self.class.get('/time')
-      response.parsed_response['time']
+      begin
+        response = self.class.get('/time')
+        response.parsed_response['time']
+      rescue SocketError => each
+        false
+      end
     end
-    alias_method :get_time, :time
 
     def store
-      response = self.class.get('/store')
-      if response
-        return Store.new(response.parsed_response)
-      else
-        return nil
+      begin
+        response = self.class.get('/store')
+        if response
+          return Store.new(response.parsed_response)
+        else
+          return nil
+        end
+      rescue SocketError => each
+        false
       end
     end
     alias_method :info, :store

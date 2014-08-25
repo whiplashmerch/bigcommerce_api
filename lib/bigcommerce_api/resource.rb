@@ -19,18 +19,18 @@ module BigcommerceAPI
     end
 
     def save
-      # delete the parent id if there is one
-      url = self.resource_url
-      self.send(self.parent + '_id=', nil) if !self.parent.nil?
-
+       url = self.resource_url
       if self.id.nil?
-        response = BigcommerceAPI::Base.post("/#{url}", :body => self.attributes(true).to_json)
+        # delete the parent id if there is one
+        self.send(self.parent + '_id=', nil) if !self.parent.nil?
+
+        response = self.class.http_request(:post, "/#{url}", :body => self.attributes(true).to_json)
       else
         # only send updated attributes
         attrs = self.attributes
         body = Hash.new 
         self.changed.each{|c| body[c] = attrs[c]}
-        response = BigcommerceAPI::Base.put("/#{url}/#{self.id}", :body => body.to_json)
+        response = self.class.http_request(:put, "/#{url}/#{self.id}", :body => body.to_json)
       end
       if response.success?
         return self.id.nil? ? self.class.new(response.parsed_response) : true
@@ -45,13 +45,25 @@ module BigcommerceAPI
       url = self.resource_url
       self.send(self.parent + '_id=', nil) if !self.parent.nil?
 
-      response = BigcommerceAPI::Base.post("/#{url}", :body => date_adjust(params).to_json)
+      response = self.class.http_request(:post, "/#{url}", :body => date_adjust(params).to_json)
       if response.success?
         return self.class.new(response.parsed_response)
       else
         self.errors = response.parsed_response
         return false
       end
+    end
+
+    def find_for_reload
+      self.class.find(self.id)
+    end
+
+    def reload
+      updated = self.find_for_reload
+      self.attributes.each do |k, v|
+        self.send("#{k}=", updated.send(k))
+      end
+      return self
     end
 
     def resource
@@ -89,7 +101,7 @@ module BigcommerceAPI
             res = m.to_s
           end
           define_method meth do
-            out = BigcommerceAPI::Base.get("#{self.send(meth + '_hash')['resource']}")
+            out = self.class.http_request(:get, "#{self.send(meth + '_hash')['resource']}")
             obj = res.singularize.camelize
             if out and !defined?('BigcommerceAPI::' + obj).nil?
               (out.success? and !out.nil?) ? out.collect{|o| ('BigcommerceAPI::' + obj).constantize.new(o)} : []
@@ -109,7 +121,7 @@ module BigcommerceAPI
             resource = m.to_s
           end
           define_method meth do
-            out = BigcommerceAPI::Base.get("#{self.send(meth + '_resource')['resource']}")
+            out = self.class.http_request(:get, "#{self.send(meth + '_resource')['resource']}")
             obj = resource.singularize.camelize
             if out and !defined?('BigcommerceAPI::' + obj).nil?
               (out.success? and !out.nil?) ? ('BigcommerceAPI::' + obj).constantize.new(out) : nil
@@ -131,7 +143,7 @@ module BigcommerceAPI
           define_method meth do
             obj = resource.singularize.camelize
             url = '/' + meth.pluralize + '/' + self.send(meth + "_id").to_s
-            out = BigcommerceAPI::Base.get("#{url}")
+            out = self.class.http_request(:get, "#{url}")
             if out and !defined?('BigcommerceAPI::' + obj).nil?
               (out.success? and !out.nil?) ? ('BigcommerceAPI::' + obj).constantize.new(out) : nil
             end
@@ -153,14 +165,22 @@ module BigcommerceAPI
 	  	end
 
 	  	def all(params={})
-	      resources = BigcommerceAPI::Base.get("/#{resource}", :query => date_adjust(params))
+	      resources = self.class.http_request(:get, "/#{resource}", :query => date_adjust(params))
 	      (resources.success? and !resources.nil?) ? resources.collect{|r| self.new(r)} : []
 	    end
 
 	    def find(id)
-	      r = BigcommerceAPI::Base.get("/#{resource}/#{id}")
+        r = self.class.http_request(:get, "/#{resource}/#{id}")
 	      (r.success? and !r.nil?) ? self.new(r) : nil
 	    end
+
+      def http_request(verb, url, options={})
+        begin
+          BigcommerceAPI::Base.send(verb, url, options)
+        rescue SocketError => e
+          BigcommerceAPI::Result.new(:success => false, :errors => "Invalid URL")
+        end
+      end
 	  end # end class methods
 
     private

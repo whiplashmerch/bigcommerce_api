@@ -32,6 +32,10 @@ module BigcommerceAPI
       'order'
     end
 
+    def find_for_reload
+      self.class.find(self.order_id, self.id)
+    end
+
     class << self
 	  	def all(order_id, params={})
 	      resources = BigcommerceAPI::Base.get("/orders/#{order_id}/products", :query => date_adjust(params))
