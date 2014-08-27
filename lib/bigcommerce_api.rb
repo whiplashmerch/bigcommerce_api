@@ -4,6 +4,7 @@ require 'active_support/inflector'
 
 # Base files & config
 require 'bigcommerce_api/inflections'
+require 'bigcommerce_api/modules/countable'
 require 'bigcommerce_api/base'
 require 'bigcommerce_api/resource'
 
