@@ -2,8 +2,12 @@ require "rubygems"
 require 'httparty'
 require 'active_support/inflector'
 
+# Base files & config
+require 'bigcommerce_api/inflections'
 require 'bigcommerce_api/base'
 require 'bigcommerce_api/resource'
+
+# Resources
 require 'bigcommerce_api/category'
 require 'bigcommerce_api/brand'
 require 'bigcommerce_api/image'

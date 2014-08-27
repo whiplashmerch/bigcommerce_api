@@ -24,13 +24,13 @@ module BigcommerceAPI
         # delete the parent id if there is one
         self.send(self.parent + '_id=', nil) if !self.parent.nil?
 
-        response = self.class.http_request(:post, "/#{url}", :body => self.attributes(true).to_json)
+        response = BigcommerceAPI::Resource.http_request(:post, "/#{url}", :body => self.attributes(true).to_json)
       else
         # only send updated attributes
         attrs = self.attributes
         body = Hash.new 
         self.changed.each{|c| body[c] = attrs[c]}
-        response = self.class.http_request(:put, "/#{url}/#{self.id}", :body => body.to_json)
+        response = BigcommerceAPI::Resource.http_request(:put, "/#{url}/#{self.id}", :body => body.to_json)
       end
       if response.success?
         return self.id.nil? ? self.class.new(response.parsed_response) : true
@@ -45,7 +45,7 @@ module BigcommerceAPI
       url = self.resource_url
       self.send(self.parent + '_id=', nil) if !self.parent.nil?
 
-      response = self.class.http_request(:post, "/#{url}", :body => date_adjust(params).to_json)
+      response = BigcommerceAPI::Resource.http_request(:post, "/#{url}", :body => date_adjust(params).to_json)
       if response.success?
         return self.class.new(response.parsed_response)
       else
@@ -101,7 +101,7 @@ module BigcommerceAPI
             res = m.to_s
           end
           define_method meth do
-            out = self.class.http_request(:get, "#{self.send(meth + '_hash')['resource']}")
+            out = BigcommerceAPI::Resource.http_request(:get, "#{self.send(meth + '_hash')['resource']}")
             obj = res.singularize.camelize
             if out and !defined?('BigcommerceAPI::' + obj).nil?
               (out.success? and !out.nil?) ? out.collect{|o| ('BigcommerceAPI::' + obj).constantize.new(o)} : []
@@ -121,7 +121,7 @@ module BigcommerceAPI
             resource = m.to_s
           end
           define_method meth do
-            out = self.class.http_request(:get, "#{self.send(meth + '_resource')['resource']}")
+            out = BigcommerceAPI::Resource.http_request(:get, "#{self.send(meth + '_resource')['resource']}")
             obj = resource.singularize.camelize
             if out and !defined?('BigcommerceAPI::' + obj).nil?
               (out.success? and !out.nil?) ? ('BigcommerceAPI::' + obj).constantize.new(out) : nil
@@ -143,7 +143,7 @@ module BigcommerceAPI
           define_method meth do
             obj = resource.singularize.camelize
             url = '/' + meth.pluralize + '/' + self.send(meth + "_id").to_s
-            out = self.class.http_request(:get, "#{url}")
+            out = BigcommerceAPI::Resource.http_request(:get, "#{url}")
             if out and !defined?('BigcommerceAPI::' + obj).nil?
               (out.success? and !out.nil?) ? ('BigcommerceAPI::' + obj).constantize.new(out) : nil
             end
@@ -165,12 +165,12 @@ module BigcommerceAPI
 	  	end
 
 	  	def all(params={})
-	      resources = self.class.http_request(:get, "/#{resource}", :query => date_adjust(params))
+	      resources = BigcommerceAPI::Resource.http_request(:get, "/#{resource}", :query => date_adjust(params))
 	      (resources.success? and !resources.nil?) ? resources.collect{|r| self.new(r)} : []
 	    end
 
 	    def find(id)
-        r = self.class.http_request(:get, "/#{resource}/#{id}")
+        r = BigcommerceAPI::Resource.http_request(:get, "/#{resource}/#{id}")
 	      (r.success? and !r.nil?) ? self.new(r) : nil
 	    end
 
