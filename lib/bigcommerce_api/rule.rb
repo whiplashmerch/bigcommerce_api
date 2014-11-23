@@ -1,12 +1,18 @@
 module BigcommerceAPI
-
   class Rule < Resource
-    attr_accessor :id, :product_id, :sort_order, :is_enabled, :is_stop, :price_adjuster, :weight_adjuster, 
-                  :is_purchasing_disabled, :purchasing_disabled_message, :is_purchasing_hidden, :image_file, 
-                  :conditions
+    attr_accessor :id,
+                  :conditions,
+                  :image_file,
+                  :is_enabled,
+                  :is_purchasing_disabled,
+                  :is_purchasing_hidden,
+                  :is_stop,
+                  :price_adjuster,
+                  :product_id,
+                  :purchasing_disabled_message,
+                  :sort_order,
+                  :weight_adjuster
 
     belongs_to :product
-  
   end
-
 end
