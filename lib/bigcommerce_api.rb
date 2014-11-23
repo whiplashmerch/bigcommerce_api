@@ -9,8 +9,9 @@ require 'bigcommerce_api/base'
 require 'bigcommerce_api/resource'
 
 # Resources
-require 'bigcommerce_api/category'
 require 'bigcommerce_api/brand'
+require 'bigcommerce_api/category'
+require 'bigcommerce_api/customer'
 require 'bigcommerce_api/image'
 require 'bigcommerce_api/option'
 require 'bigcommerce_api/option_set'
