@@ -35,7 +35,7 @@ module BigcommerceAPI
 
     # this overrides the default method, since this has to come in with an order id
     def resource_url
-      "orders/#{self.order_id}/shippingaddresses"
+      "orders/#{self.order_id}/shipping_addresses"
     end
 
     def parent
@@ -61,13 +61,13 @@ module BigcommerceAPI
     class << self
     	def all(order_id,
         params={})
-        resources = BigcommerceAPI::Base.get("/orders/#{order_id}/shippingaddresses", query: date_adjust(params))
+        resources = BigcommerceAPI::Base.get("/orders/#{order_id}/shipping_addresses", query: date_adjust(params))
         (resources.success? and !resources.nil?) ? resources.collect{|r| self.new(r)} : []
       end
 
       def find(order_id,
         id)
-        r = BigcommerceAPI::Base.get("/orders/#{order_id}/shippingaddresses/#{id}")
+        r = BigcommerceAPI::Base.get("/orders/#{order_id}/shipping_addresses/#{id}")
         (r.success? and !r.nil?) ? self.new(r) : nil
       end
     end

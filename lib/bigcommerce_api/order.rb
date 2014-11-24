@@ -57,9 +57,12 @@ module BigcommerceAPI
                   :wrapping_cost_inc_tax,
                   :wrapping_cost_tax,
                   :wrapping_cost_tax_class_id
-                  # :coupons, :shipping_addresses
 
-    has_many :coupons, { products: :order_products }, :shipping_addresses
+    has_many :coupons,
+             :order_products,
+             :shipping_addresses,
+             :shipments
+
     belongs_to :customer,
                :currency,
                :default_currency,
@@ -67,10 +70,5 @@ module BigcommerceAPI
                :wrapping_cost_tax_class,
                :payment_provider,
                :handling_cost_tax_class
-
-    def shipments
-      s = BigcommerceAPI::Base.get '/orders/' + self.id.to_s + '/shipments'
-      (s.success? and !s.nil?) ? s.collect{|o| BigcommerceAPI::Shipment.new(o)} : []
-    end
   end
 end
