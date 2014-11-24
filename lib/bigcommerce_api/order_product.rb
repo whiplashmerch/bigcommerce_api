@@ -55,7 +55,7 @@ module BigcommerceAPI
     # reserved
     attr_accessor :orderproduct_type
 
-    def shippingaddress
+    def shipping_address
       a = BigcommerceAPI::Base.get "/orders/#{self.order_id}/shippingaddresses/#{self.order_address_id}"
       (a.success? and !a.nil?) ? BigcommerceAPI::Shippingaddress.new(a) : nil
     end

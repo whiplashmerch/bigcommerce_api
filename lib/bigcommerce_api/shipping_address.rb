@@ -1,5 +1,5 @@
 module BigcommerceAPI
-  class Shippingaddress < Resource
+  class ShippingAddress < Resource
     attr_accessor :id,
                   :base_cost,
                   :base_handling_cost,

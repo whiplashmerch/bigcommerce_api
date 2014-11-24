@@ -39,7 +39,7 @@ Gem::Specification.new do |s|
     "lib/bigcommerce_api/result.rb",
     "lib/bigcommerce_api/rule.rb",
     "lib/bigcommerce_api/shipment.rb",
-    "lib/bigcommerce_api/shippingaddress.rb",
+    "lib/bigcommerce_api/shipping_address.rb",
     "lib/bigcommerce_api/sku.rb",
     "lib/bigcommerce_api/store.rb",
     "lib/bigcommerce_api/tax_class.rb"
