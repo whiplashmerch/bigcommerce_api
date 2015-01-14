@@ -47,7 +47,7 @@ api = BigcommerceAPI::Base.new(
 )
 ```
 
-Or using the new OAuth credentials (currently in Alpha at Bigcommerce):
+Or using the new OAuth credentials:
 ```
 api = BigcommerceAPI::Base.new(
     :client_id => APP_CLIENT_ID,
@@ -59,10 +59,16 @@ api = BigcommerceAPI::Base.new(
 You can test your connection by getting the time
 
 ```
- BigcommerceAPI::Base.get_time
+ api.time
 ```
 
 A valid time means your connection and credentials are good.
+
+You can also get your store info settings via the 'api' instance:
+
+```
+api.store
+```
 
 ### Usage
 
