@@ -59,9 +59,10 @@ module BigcommerceAPI
                   :wrapping_cost_tax_class_id
 
     has_many :coupons,
-             :order_products,
+             { products: :order_products },
              :shipping_addresses,
              :shipments
+    alias_method :order_line_items, :products
 
     belongs_to :customer,
                :currency,
