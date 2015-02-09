@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
     "lib/bigcommerce_api/brand.rb",
     "lib/bigcommerce_api/category.rb",
     "lib/bigcommerce_api/customer.rb",
+    "lib/bigcommerce_api/hook.rb",
     "lib/bigcommerce_api/image.rb",
     "lib/bigcommerce_api/inflections.rb",
     "lib/bigcommerce_api/modules/countable.rb",
