@@ -59,6 +59,17 @@ module BigcommerceAPI
       end
     end
 
+    def delete(params={})
+      url = self.resource_url
+      response = BigcommerceAPI::Resource.http_request(:delete, "/#{url}/#{self.id}")
+      if response.success?
+        return true
+      else
+        self.errors = response.parsed_response
+        return false
+      end
+    end
+
     def find_for_reload
       self.class.find(self.id)
     end
