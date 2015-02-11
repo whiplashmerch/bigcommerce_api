@@ -1,5 +1,6 @@
 module BigcommerceAPI
   class Customer < Resource
+    extend BigcommerceAPI::Countable
     attr_accessor :id,
                   :company,
                   :first_name,
