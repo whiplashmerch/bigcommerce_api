@@ -9,6 +9,7 @@ require 'bigcommerce_api/base'
 require 'bigcommerce_api/resource'
 
 # Resources
+require 'bigcommerce_api/address'
 require 'bigcommerce_api/brand'
 require 'bigcommerce_api/category'
 require 'bigcommerce_api/customer'

@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
   ]
   s.files = [
     "lib/bigcommerce_api.rb",
+    "lib/bigcommerce_api/address.rb",
     "lib/bigcommerce_api/base.rb",
     "lib/bigcommerce_api/brand.rb",
     "lib/bigcommerce_api/category.rb",
@@ -75,4 +76,3 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<jeweler>, [">= 0"])
   end
 end
-

@@ -13,6 +13,8 @@ module BigcommerceAPI
                   :customer_group_id,
                   :notes
 
+    attr_accessor :addresses_hash
+
     belongs_to :order
     has_many :addresses
   end
