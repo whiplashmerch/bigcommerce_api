@@ -4,17 +4,7 @@ module BigcommerceAPI
     attr_accessor :errors
 
   	def initialize(data)
-      data.each do |k, v|
-        if v and v.is_a? String
-          val = v.gsub(/\n/, '').gsub(/\t/, '').strip
-        else
-          val = v
-        end
-        k = "#{k}_hash" if !self.class.has_many_options.nil? and self.class.has_many_options.include? k
-        k = "#{k}_resource" if !self.class.has_one_options.nil? and self.class.has_one_options.include? k
-        k = "#{self.resource}_#{k}" if k == 'type'
-        send(:"#{k}=", val) if self.respond_to? "#{k}="
-      end
+      self.assign_attributes(data)
       self.attributes_were = data
     end
 
@@ -42,6 +32,24 @@ module BigcommerceAPI
       else
         self.errors = response.parsed_response
         return false
+      end
+    end
+
+    def update_attributes(attributes)
+      assign_attributes(attributes) && save
+    end
+
+    def assign_attributes(attributes)
+      attributes.each do |k, v|
+        if v and v.is_a? String
+          val = v.gsub(/\n/, '').gsub(/\t/, '').strip
+        else
+          val = v
+        end
+        k = "#{k}_hash" if !self.class.has_many_options.nil? and self.class.has_many_options.include? k
+        k = "#{k}_resource" if !self.class.has_one_options.nil? and self.class.has_one_options.include? k
+        k = "#{self.resource}_#{k}" if k == 'type'
+        send(:"#{k}=", val) if self.respond_to? "#{k}="
       end
     end
 
