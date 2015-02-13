@@ -1,10 +1,12 @@
 module BigcommerceAPI
-
   class Brand < Resource
-    attr_accessor :id, :name, :page_title, :meta_keywords, :meta_description, 
-                  :image_file, :search_keywords
-
+    attr_accessor :id,
+                  :image_file,
+                  :meta_description,
+                  :meta_keywords,
+                  :name,
+                  :page_title,
+                  :search_keywords
   end
-
 end
 

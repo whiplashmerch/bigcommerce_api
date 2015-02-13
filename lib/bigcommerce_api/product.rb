@@ -1,24 +1,102 @@
 module BigcommerceAPI
-
   class Product < Resource
     extend BigcommerceAPI::Countable
 
     # incoming attributes
-    attr_accessor :brand_id, :myob_expense_account, :inventory_tracking, :preorder_release_date, :tax_class_id, :sku, :date_modified, :fixed_cost_shipping_price, :categories, :meta_description, :sort_order, :related_products, :is_visible, :description, :layout_file, :meta_keywords, :rating_total, :price, :event_date_field_name, :height, :order_quantity_minimum, :myob_asset_account, :order_quantity_maximum, :peachtree_gl_account, :retail_price, :availability_description, :weight, :is_preorder_only, :date_created, :open_graph_title, :rating_count, :open_graph_type, :option_set_id, :is_featured, :date_last_imported, :option_set_display, :availability, :is_condition_shown, :name, :inventory_warning_level, :event_date_end, :cost_price, :inventory_level, :event_date_type, :upc, :open_graph_description, :depth, :custom_url, :myob_income_account, :condition, :is_price_hidden, :custom_fields, :configurable_fields, :discount_rules, :warranty, :total_sold, :view_count, :event_date_start, :price_hidden_label, :videos, :sale_price, :bin_picking_number, :preorder_message, :is_open_graph_thumbnail, :search_keywords, :is_free_shipping, :width, :type, :id, :page_title, :downloads 
+    attr_accessor :id,
+                  :availability,
+                  :availability_description,
+                  :bin_picking_number,
+                  :brand_id,
+                  :categories,
+                  :condition,
+                  :configurable_fields,
+                  :cost_price,
+                  :custom_fields,
+                  :custom_url,
+                  :date_created,
+                  :date_last_imported,
+                  :date_modified,
+                  :depth,
+                  :description,
+                  :discount_rules,
+                  :downloads,
+                  :event_date_end,
+                  :event_date_field_name,
+                  :event_date_start,
+                  :event_date_type,
+                  :fixed_cost_shipping_price,
+                  :height,
+                  :inventory_level,
+                  :inventory_tracking,
+                  :inventory_warning_level,
+                  :is_condition_shown,
+                  :is_featured,
+                  :is_free_shipping,
+                  :is_open_graph_thumbnail,
+                  :is_preorder_only,
+                  :is_price_hidden,
+                  :is_visible,
+                  :layout_file,
+                  :meta_description,
+                  :meta_keywords,
+                  :myob_asset_account,
+                  :myob_expense_account,
+                  :myob_income_account,
+                  :name,
+                  :open_graph_description,
+                  :open_graph_title,
+                  :open_graph_type,
+                  :option_set_display,
+                  :option_set_id,
+                  :order_quantity_maximum,
+                  :order_quantity_minimum,
+                  :page_title,
+                  :peachtree_gl_account,
+                  :preorder_message,
+                  :preorder_release_date,
+                  :price,
+                  :price_hidden_label,
+                  :rating_count,
+                  :rating_total,
+                  :related_products,
+                  :retail_price,
+                  :sale_price,
+                  :search_keywords,
+                  :sku,
+                  :sort_order,
+                  :tax_class_id,
+                  :total_sold,
+                  :type,
+                  :upc,
+                  :videos,
+                  :view_count,
+                  :warranty,
+                  :weight,
+                  :width
+
     # has_many
-    attr_accessor :options_hash, :skus_hash, :rules_hash, :images_hash
+    attr_accessor :options_hash,
+                  :skus_hash,
+                  :rules_hash,
+                  :images_hash
 
     # has_one
-    attr_accessor :option_set_resource, :brand_resource
+    attr_accessor :option_set_resource,
+                  :brand_resource
 
-    # reserved 
+    # reserved
     attr_accessor :product_type
 
 
-    has_many :skus, :rules, :images, {:options => :product_options}
-    has_one :brand, :option_set
-    belongs_to :tax_class
-    
-  end
+    has_many :skus,
+             :rules,
+             :images,
+             { options: :product_options }
 
+    has_one :brand,
+            :option_set
+
+    belongs_to :tax_class
+  end
 end

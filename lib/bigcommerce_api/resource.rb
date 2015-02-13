@@ -4,17 +4,7 @@ module BigcommerceAPI
     attr_accessor :errors
 
   	def initialize(data)
-      data.each do |k, v|
-        if v and v.is_a? String
-          val = v.gsub(/\n/, '').gsub(/\t/, '').strip
-        else
-          val = v
-        end
-        k = "#{k}_hash" if !self.class.has_many_options.nil? and self.class.has_many_options.include? k
-        k = "#{k}_resource" if !self.class.has_one_options.nil? and self.class.has_one_options.include? k
-        k = "#{self.resource}_#{k}" if k == 'type'
-        send(:"#{k}=", val) if self.respond_to? "#{k}="
-      end
+      self.assign_attributes(data)
       self.attributes_were = data
     end
 
@@ -45,6 +35,24 @@ module BigcommerceAPI
       end
     end
 
+    def update_attributes(attributes)
+      assign_attributes(attributes) && save
+    end
+
+    def assign_attributes(attributes)
+      attributes.each do |k, v|
+        if v and v.is_a? String
+          val = v.gsub(/\n/, '').gsub(/\t/, '').strip
+        else
+          val = v
+        end
+        k = "#{k}_hash" if !self.class.has_many_options.nil? and self.class.has_many_options.include? k
+        k = "#{k}_resource" if !self.class.has_one_options.nil? and self.class.has_one_options.include? k
+        k = "#{self.resource}_#{k}" if k == 'type'
+        send(:"#{k}=", val) if self.respond_to? "#{k}="
+      end
+    end
+
     def create(params={})
       # delete the parent id if there is one
       url = self.resource_url
@@ -53,6 +61,17 @@ module BigcommerceAPI
       response = BigcommerceAPI::Resource.http_request(:post, "/#{url}", :body => date_adjust(params).to_json)
       if response.success?
         return self.class.new(response.parsed_response)
+      else
+        self.errors = response.parsed_response
+        return false
+      end
+    end
+
+    def delete(params={})
+      url = self.resource_url
+      response = BigcommerceAPI::Resource.http_request(:delete, "/#{url}/#{self.id}")
+      if response.success?
+        return true
       else
         self.errors = response.parsed_response
         return false

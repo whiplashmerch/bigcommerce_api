@@ -1,9 +1,20 @@
 module BigcommerceAPI
-
   class Shipment < Resource
-    attr_accessor :items, :comments, :order_id, :shipping_address, :order_address_id, :id, :tracking_number, :billing_address, :customer_id, :shipping_method, :date_created
+    attr_accessor :id,
+                  :billing_address,
+                  :comments,
+                  :customer_id,
+                  :date_created,
+                  :items,
+                  :order_address_id,
+                  :order_id,
+                  :shipping_address,
+                  :shipping_method,
+                  :tracking_number
 
-    belongs_to :customer, {:order_address => :shipping_address}, :order
+    belongs_to :customer,
+               { order_address: :shipping_address },
+               :order
 
     # these are all overrides, since Shipments work a little differently
     def resource_url
@@ -20,7 +31,7 @@ module BigcommerceAPI
 
     class << self
 	  	def all(order_id, params={})
-	      resources = BigcommerceAPI::Base.get("/orders/#{order_id}/shipments", :query => date_adjust(params))
+	      resources = BigcommerceAPI::Base.get("/orders/#{order_id}/shipments", query: date_adjust(params))
 	      (resources.success? and !resources.nil?) ? resources.collect{|r| self.new(r)} : []
 	    end
 
@@ -29,7 +40,5 @@ module BigcommerceAPI
 	      (r.success? and !r.nil?) ? self.new(r) : nil
 	    end
 	  end
-  
   end
-
 end
