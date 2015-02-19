@@ -1,4 +1,4 @@
-module BigcommerceAPI  
+module BigcommerceAPI
 
   class Resource < Base
     attr_accessor :errors
@@ -23,7 +23,7 @@ module BigcommerceAPI
       else
         # only send updated attributes
         attrs = self.attributes
-        body = Hash.new 
+        body = Hash.new
         self.changed.each{|c| body[c] = attrs[c]}
         response = BigcommerceAPI::Resource.http_request(:put, "/#{url}/#{self.id}", :body => body.to_json)
       end
@@ -53,12 +53,16 @@ module BigcommerceAPI
       end
     end
 
-    def create(params={})
+    def create
       # delete the parent id if there is one
       url = self.resource_url
       self.send(self.parent + '_id=', nil) if !self.parent.nil?
 
-      response = BigcommerceAPI::Resource.http_request(:post, "/#{url}", :body => date_adjust(params).to_json)
+      attrs = self.attributes
+      body = Hash.new
+      self.changed.each{|c| body[c] = attrs[c]}
+
+      response = BigcommerceAPI::Resource.http_request(:post, "/#{url}", :body => body.to_json)
       if response.success?
         return self.class.new(response.parsed_response)
       else
@@ -67,7 +71,7 @@ module BigcommerceAPI
       end
     end
 
-    def delete(params={})
+    def delete
       url = self.resource_url
       response = BigcommerceAPI::Resource.http_request(:delete, "/#{url}/#{self.id}")
       if response.success?
@@ -153,7 +157,7 @@ module BigcommerceAPI
           end
         end
       end
-      
+
       def belongs_to(*names)
         self.belongs_to_options = names.collect{|x| x.is_a?(Hash) ? x.keys.first.to_s : x.to_s}
         names.each do |m|
