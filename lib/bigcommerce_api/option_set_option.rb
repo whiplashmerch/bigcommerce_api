@@ -10,5 +10,13 @@ module BigcommerceAPI
 
     has_one :option
     belongs_to :option_set
+
+    def resource_url
+      "option_sets/#{self.option_set_id}/options"
+    end
+
+    def parent
+      'option_set'
+    end
   end
 end
