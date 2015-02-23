@@ -181,7 +181,7 @@ module BigcommerceAPI
 
 	  	def resource
 	  		out = self.name.split('::').last.downcase
-	  		last = out.split(//).last(1).to_s
+	  		last = out.split(//).last.to_s
         if last == 'y'
           out = out.chomp('y') + 'ies'
 	  		elsif last == 's'
