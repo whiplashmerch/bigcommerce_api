@@ -27,9 +27,14 @@ module BigcommerceAPI
     end
     
     def option_value
-      option_id = self.product_option.option_id
-      ov = BigcommerceAPI::Base.get '/options/' + option_id.to_s + '/values/' + self.option_value_id.to_s
-      (ov.success? and !ov.nil?) ? OptionValue.new(ov) : nil
+      po = self.product_option
+      if po # we've got to have a product option for this to work
+        option_id = po.option_id
+        ov = BigcommerceAPI::Base.get '/options/' + option_id.to_s + '/values/' + self.option_value_id.to_s
+        (ov.success? and !ov.nil?) ? OptionValue.new(ov) : nil
+      else
+        return nil
+      end
     end
     
     def description
