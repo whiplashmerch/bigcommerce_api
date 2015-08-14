@@ -18,5 +18,9 @@ module BigcommerceAPI
 
     belongs_to :order
     has_many :addresses
+
+    def self.find(id)
+      super unless id.to_i == 0
+    end
   end
 end

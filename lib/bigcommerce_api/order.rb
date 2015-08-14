@@ -71,5 +71,10 @@ module BigcommerceAPI
                :wrapping_cost_tax_class,
                :payment_provider,
                :handling_cost_tax_class
+
+    alias_method :old_customer, :customer
+    def customer
+      old_customer unless customer_id == 0
+    end
   end
 end
