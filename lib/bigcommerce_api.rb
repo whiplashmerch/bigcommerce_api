@@ -7,6 +7,7 @@ require 'bigcommerce_api/inflections'
 require 'bigcommerce_api/modules/countable'
 require 'bigcommerce_api/base'
 require 'bigcommerce_api/resource'
+require 'bigcommerce_api/error'
 
 # Resources
 require 'bigcommerce_api/address'

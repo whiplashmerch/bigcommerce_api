@@ -31,7 +31,7 @@ module BigcommerceAPI
         return self.id.nil? ? self.class.new(response.parsed_response) : true
       else
         self.errors = response.parsed_response
-        return false
+        raise BigcommerceAPI::Error.new(self.errors)
       end
     end
 
@@ -67,7 +67,7 @@ module BigcommerceAPI
         return self.class.new(response.parsed_response)
       else
         self.errors = response.parsed_response
-        return false
+        raise BigcommerceAPI::Error.new(self.errors)
       end
     end
 
@@ -78,7 +78,7 @@ module BigcommerceAPI
         return true
       else
         self.errors = response.parsed_response
-        return false
+        raise BigcommerceAPI::Error.new(self.errors)
       end
     end
 
