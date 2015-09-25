@@ -1,12 +1,10 @@
 module BigcommerceAPI
   class Error < StandardError
     attr_reader :code
-    def initialize(errors)
-      e = errors.first
-      @code = e["status"]
-      message = e["message"]
-      message += " #{e["details"]["conflict_reason"]}" if e["details"]
-      super(message)
+    def initialize(response)
+      @code = response.code
+      # use a more verbose error message if available
+      super(response.body || response.message)
     end
   end
 end

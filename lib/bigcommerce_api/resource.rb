@@ -204,7 +204,11 @@ module BigcommerceAPI
 
       def http_request(verb, url, options={})
         begin
-          BigcommerceAPI::Base.send(verb, url, options)
+          response = BigcommerceAPI::Base.send(verb, url, options)
+          if response.code >= 400
+            raise BigcommerceAPI::Error.new(response)
+          end
+          response
         rescue SocketError => e
           BigcommerceAPI::Result.new(:success => false, :errors => "Invalid URL")
         end
