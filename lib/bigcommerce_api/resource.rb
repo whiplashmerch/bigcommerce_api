@@ -27,12 +27,8 @@ module BigcommerceAPI
         self.changed.each{|c| body[c] = attrs[c]}
         response = BigcommerceAPI::Resource.http_request(:put, "/#{url}/#{self.id}", :body => body.to_json)
       end
-      if response.success?
-        return self.id.nil? ? self.class.new(response.parsed_response) : true
-      else
-        self.errors = response.parsed_response
-        raise BigcommerceAPI::Error.new(self.errors)
-      end
+
+      return self.id.nil? ? self.class.new(response.parsed_response) : true
     end
 
     def update_attributes(attributes)
@@ -63,23 +59,15 @@ module BigcommerceAPI
       self.changed.each{|c| body[c] = attrs[c]}
 
       response = BigcommerceAPI::Resource.http_request(:post, "/#{url}", :body => body.to_json)
-      if response.success?
-        return self.class.new(response.parsed_response)
-      else
-        self.errors = response.parsed_response
-        raise BigcommerceAPI::Error.new(self.errors)
-      end
+
+      return self.class.new(response.parsed_response)
     end
 
     def delete
       url = self.resource_url
-      response = BigcommerceAPI::Resource.http_request(:delete, "/#{url}/#{self.id}")
-      if response.success?
-        return true
-      else
-        self.errors = response.parsed_response
-        raise BigcommerceAPI::Error.new(self.errors)
-      end
+      BigcommerceAPI::Resource.http_request(:delete, "/#{url}/#{self.id}")
+
+      return true
     end
 
     def find_for_reload
@@ -206,12 +194,36 @@ module BigcommerceAPI
         begin
           response = BigcommerceAPI::Base.send(verb, url, options)
           if response.code >= 400
-            raise BigcommerceAPI::Error.new(response)
+            message = parse_errors(response)
+            raise BigcommerceAPI::Error.new(response.code, message)
           end
           response
         rescue SocketError => e
           BigcommerceAPI::Result.new(:success => false, :errors => "Invalid URL")
         end
+      end
+
+      private
+
+      # recursive function to convert hash into string, e.g. {a: {b: "c"}, d: "e"} becomes "c e"
+      def hashToString(hash:, acc: "", delimiter: " ", skip: [])
+        if !hash.is_a?(Hash)
+          acc += hash.to_s
+        else
+          hash.map { |k, v|
+            if skip.include?(k.to_s)
+              ""
+            else
+              hashToString(hash: v, acc: acc, delimiter: delimiter, skip: skip)
+            end
+          }.join(delimiter)
+        end
+      end
+
+      def parse_errors(response)
+        e = response  # httparty automatically converts JSON string to hash and array of hash
+        e = e.first if e.is_a?(Array) # remove array
+        hashToString(hash: e, skip: ["status"])
       end
 	  end # end class methods
 
