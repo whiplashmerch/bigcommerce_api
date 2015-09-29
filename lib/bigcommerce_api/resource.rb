@@ -28,7 +28,7 @@ module BigcommerceAPI
         response = BigcommerceAPI::Resource.http_request(:put, "/#{url}/#{self.id}", :body => body.to_json)
       end
 
-      return self.id.nil? ? self.class.new(response.parsed_response) : true
+      self.class.new(response.parsed_response)
     end
 
     def update_attributes(attributes)
@@ -206,24 +206,20 @@ module BigcommerceAPI
       private
 
       # recursive function to convert hash into string, e.g. {a: {b: "c"}, d: "e"} becomes "c e"
-      def hashToString(hash:, acc: "", delimiter: " ", skip: [])
-        if !hash.is_a?(Hash)
-          acc += hash.to_s
+      def hash_to_s(hash)
+        if hash.is_a?(Array)
+          hash.map do |value|
+            hash_to_s(value)
+          end.to_sentence
+        elsif hash.is_a?(Hash)
+          hash_to_s(hash.values)
         else
-          hash.map { |k, v|
-            if skip.include?(k.to_s)
-              ""
-            else
-              hashToString(hash: v, acc: acc, delimiter: delimiter, skip: skip)
-            end
-          }.join(delimiter)
+          hash.to_s.gsub(/[,.]$/, '')
         end
       end
 
       def parse_errors(response)
-        e = response  # httparty automatically converts JSON string to hash and array of hash
-        e = e.first if e.is_a?(Array) # remove array
-        hashToString(hash: e, skip: ["status"])
+        hash_to_s(response.parsed_response)
       end
 	  end # end class methods
 
