@@ -3,7 +3,7 @@ module BigcommerceAPI
   class Resource < Base
     attr_accessor :errors
 
-  	def initialize(data)
+    def initialize(data)
       self.assign_attributes(data)
       self.attributes_were = data
     end
@@ -14,7 +14,7 @@ module BigcommerceAPI
     end
 
     def save
-       url = self.resource_url
+      url = self.resource_url
       if self.id.nil?
         # delete the parent id if there is one
         self.send(self.parent + '_id=', nil) if !self.parent.nil?
@@ -103,7 +103,7 @@ module BigcommerceAPI
       return changed
     end
 
-  	class << self
+    class << self
       attr_accessor :has_many_options, :has_one_options, :belongs_to_options
 
       def has_many(*names)
@@ -167,28 +167,28 @@ module BigcommerceAPI
         end
       end
 
-	  	def resource
-	  		out = self.name.split('::').last.downcase
-	  		last = out.split(//).last.to_s
+      def resource
+        out = self.name.split('::').last.downcase
+        last = out.split(//).last.to_s
         if last == 'y'
           out = out.chomp('y') + 'ies'
-	  		elsif last == 's'
-	  			out += 'es'
-	  		else
-	  			out += 's'
-	  		end
-	  		return out
-	  	end
+        elsif last == 's'
+          out += 'es'
+        else
+          out += 's'
+        end
+        return out
+      end
 
-	  	def all(params={})
-	      resources = BigcommerceAPI::Resource.http_request(:get, "/#{resource}", :query => date_adjust(params))
-	      (resources.success? and !resources.nil?) ? resources.collect{|r| self.new(r)} : []
-	    end
+      def all(params={})
+        resources = BigcommerceAPI::Resource.http_request(:get, "/#{resource}", :query => date_adjust(params))
+        (resources.success? and !resources.nil?) ? resources.collect{|r| self.new(r)} : []
+      end
 
-	    def find(id)
+      def find(id)
         r = BigcommerceAPI::Resource.http_request(:get, "/#{resource}/#{id}")
-	      (r.success? and !r.nil?) ? self.new(r) : nil
-	    end
+        (r.success? and !r.nil?) ? self.new(r) : nil
+      end
 
       def http_request(verb, url, options={})
         begin
@@ -221,10 +221,10 @@ module BigcommerceAPI
       def parse_errors(response)
         hash_to_s(response.parsed_response)
       end
-	  end # end class methods
+    end # end class methods
 
     private
-      attr_accessor :attributes_were
+    attr_accessor :attributes_were
 
   end
 
