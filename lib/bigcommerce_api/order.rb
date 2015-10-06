@@ -63,6 +63,7 @@ module BigcommerceAPI
              :shipping_addresses,
              :shipments
     alias_method :order_line_items, :products
+    alias_method :shippingaddresses, :shipping_addresses
 
     belongs_to :customer,
                :currency,
