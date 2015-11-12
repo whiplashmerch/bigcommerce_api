@@ -186,6 +186,7 @@ module BigcommerceAPI
       end
 
       def find(id)
+        return if id.blank?
         r = BigcommerceAPI::Resource.http_request(:get, "/#{resource}/#{id}")
         (r.success? and !r.nil?) ? self.new(r) : nil
       end
