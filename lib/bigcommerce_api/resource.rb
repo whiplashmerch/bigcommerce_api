@@ -25,6 +25,7 @@ module BigcommerceAPI
         attrs = self.attributes
         body = Hash.new
         self.changed.each{|c| body[c] = attrs[c]}
+        body.delete('date_modified')
         response = BigcommerceAPI::Resource.http_request(:put, "/#{url}/#{self.id}", :body => body.to_json)
       end
 
