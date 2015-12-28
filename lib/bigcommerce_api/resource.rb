@@ -196,7 +196,14 @@ module BigcommerceAPI
         begin
           response = BigcommerceAPI::Base.send(verb, url, options)
           if response.code >= 400
-            message = parse_errors(response)
+            message = case response.code
+                      when 429
+                        "Too many requests, please retry in #{response.headers["x-retry-after"]} second."
+                      when 500
+                        "Internal Error"
+                      else
+                        parse_errors(response)
+                      end
             raise BigcommerceAPI::Error.new(response.code, message)
           end
           response
