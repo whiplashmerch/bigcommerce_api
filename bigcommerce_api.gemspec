@@ -19,9 +19,12 @@ Gem::Specification.new do |s|
   ]
   s.files = [
     "lib/bigcommerce_api.rb",
+    "lib/bigcommerce_api/address.rb",
     "lib/bigcommerce_api/base.rb",
     "lib/bigcommerce_api/brand.rb",
     "lib/bigcommerce_api/category.rb",
+    "lib/bigcommerce_api/customer.rb",
+    "lib/bigcommerce_api/hook.rb",
     "lib/bigcommerce_api/image.rb",
     "lib/bigcommerce_api/inflections.rb",
     "lib/bigcommerce_api/modules/countable.rb",
@@ -38,7 +41,7 @@ Gem::Specification.new do |s|
     "lib/bigcommerce_api/result.rb",
     "lib/bigcommerce_api/rule.rb",
     "lib/bigcommerce_api/shipment.rb",
-    "lib/bigcommerce_api/shippingaddress.rb",
+    "lib/bigcommerce_api/shipping_address.rb",
     "lib/bigcommerce_api/sku.rb",
     "lib/bigcommerce_api/store.rb",
     "lib/bigcommerce_api/tax_class.rb"
@@ -58,12 +61,14 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<rdoc>, [">= 0"])
       s.add_development_dependency(%q<bundler>, [">= 0"])
       s.add_development_dependency(%q<jeweler>, [">= 0"])
+      s.add_development_dependency(%q<minitest>, [">= 0"])
     else
       s.add_dependency(%q<activesupport>, [">= 2.3.5"])
       s.add_dependency(%q<httparty>, [">= 0"])
       s.add_dependency(%q<rdoc>, [">= 0"])
       s.add_dependency(%q<bundler>, [">= 0"])
       s.add_dependency(%q<jeweler>, [">= 0"])
+      s.add_dependency(%q<minitest>, [">= 0"])
     end
   else
     s.add_dependency(%q<activesupport>, [">= 2.3.5"])
@@ -71,6 +76,6 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<rdoc>, [">= 0"])
     s.add_dependency(%q<bundler>, [">= 0"])
     s.add_dependency(%q<jeweler>, [">= 0"])
+    s.add_dependency(%q<minitest>, [">= 0"])
   end
 end
-

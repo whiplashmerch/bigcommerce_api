@@ -4,27 +4,37 @@ module BigcommerceAPI
     extend BigcommerceAPI
 
     include HTTParty
-    format :json
-    headers 'Accept' => "application/json"
-    headers 'Content-Type' => "application/json"
+
+    def self.default_options
+      Thread.current["BigcommerceAPI"] ||= {
+        parser: HTTParty::Parser,
+        format: :json,
+        headers: { "Accept" => "application/json", "Content-Type" => "application/json" }
+      }
+    end
 
     def initialize(params={})
       # for the time being, accept old school API params
+      session_options = self.class.default_options
       if params[:username] and params[:api_key]
-        self.class.basic_auth params[:username], params[:api_key]
-      # default to Oauth
+          session_options[:username] = params[:username]
+          session_options[:password] = params[:api_key]
+        # default to Oauth
       else
-        self.class.headers 'X-Auth-Client' => params[:client_id]
-        self.class.headers 'X-Auth-Token' => params[:access_token]
+        session_options[:headers]['X-Auth-Client'] = params[:client_id]
+        session_options[:headers]['X-Auth-Token']  = params[:access_token]
       end
 
       # if we're using Oauth, we're probably grabbing :store_hash
       # accept :store_url for legacy purposes
-      if params[:store_url]
-        self.class.base_uri(params[:store_url] + '/api/v2/')
-      else
-        self.class.base_uri("https://api.bigcommerce.com/stores/#{params[:store_hash]}/v2/")
-      end
+      session_options[:base_uri] = if params[:store_url]
+                                     "#{params[:store_url]}/api/v2"
+                                   else
+                                     "https://api.bigcommerce.com/stores/#{params[:store_hash]}/v2"
+                                   end
+      session_options[:base_uri] = HTTParty.normalize_base_uri(session_options[:base_uri])
+
+      Thread.current["BigcommerceAPI"] = session_options
     end
 
     def time
@@ -74,7 +84,7 @@ module BigcommerceAPI
 
     class << self
       def clean!(hash)
-        hash.each do |k, v| 
+        hash.each do |k, v|
           if v.is_a? Hash
             clean!(v)
           else
@@ -88,7 +98,7 @@ module BigcommerceAPI
       def to_rfc2822(datetime)
         datetime.strftime("%a, %d %b %Y %H:%M:%S %z")
       end
-      
+
       def date_adjust(params)
         [:date_created, :date_modified, :date_last_imported, :date_shipped, :min_date_created, :max_date_created, :min_date_modified, :max_date_modified, :min_date_last_imported, :max_date_last_imported].each do |date|
           [date, date.to_s].each do |d|
@@ -104,7 +114,7 @@ module BigcommerceAPI
         return params
       end
     end
-        
+
   end
 
 end

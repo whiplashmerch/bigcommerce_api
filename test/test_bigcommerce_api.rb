@@ -1,7 +1,7 @@
 require 'helper'
 
-class TestBigcommerceApi < Test::Unit::TestCase
-  should "probably rename this file and start testing for real" do
-    flunk "hey buddy, you should probably rename this file and start testing for real"
+class BigcommerceAPITest < Minitest::Test
+  def test_hello_world
+    assert BigcommerceAPI
   end
 end
