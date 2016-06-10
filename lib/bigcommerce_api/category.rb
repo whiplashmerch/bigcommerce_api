@@ -1,5 +1,6 @@
 module BigcommerceAPI
   class Category < Resource
+    extend BigcommerceAPI::Countable
     attr_accessor :id,
                   :description,
                   :image_file,
@@ -16,4 +17,3 @@ module BigcommerceAPI
                   :url
   end
 end
-

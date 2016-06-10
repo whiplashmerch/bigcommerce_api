@@ -1,5 +1,6 @@
 module BigcommerceAPI
   class OptionSet < Resource
+    extend BigcommerceAPI::Countable
     attr_accessor :id,
                   :options_hash,
                   :name
