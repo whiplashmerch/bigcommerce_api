@@ -1,5 +1,6 @@
 module BigcommerceAPI
   class Option < Resource
+    extend BigcommerceAPI::Countable
     attr_accessor :id,
                   :display_name,
                   :name,
